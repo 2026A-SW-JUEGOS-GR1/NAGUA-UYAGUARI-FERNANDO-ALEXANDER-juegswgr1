@@ -1,0 +1,42 @@
+{
+    "activeFile": "mapa.json",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "#background": {
+            "scaleInEditor": 1
+        },
+        "mapa.json": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 538,
+                "y": 203
+            }
+        },
+        "mapa.json#background-1": {
+            "scaleInDock": 1
+        }
+    },
+    "last.imagePath": "/home/ferkhan/Workspace/NAGUA-UYAGUARI-FERNANDO-ALEXANDER-juegswgr1/Proyectos",
+    "map.height": 10,
+    "map.lastUsedFormat": "json",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 20,
+    "openFiles": [
+        "mapa.json"
+    ],
+    "project": "proyecto-01.tiled-project",
+    "recentFiles": [
+        "mapa.json"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 65,
+        "width": 65
+    }
+}
