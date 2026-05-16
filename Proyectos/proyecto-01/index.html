@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Juego - Proyecto 01</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }w
+
+        canvas {
+            display: block;
+        }
+
+        /* Clase para ocultar texto visualmente pero mantenerlo accesible para lectores de pantalla */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+    <!-- Cargando Phaser 4 desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@4.1.0/dist/phaser.min.js"></script>
+</head>
+
+<body>
+    <main id="game-container" tabindex="0" aria-label="Área interactiva del juego">
+        <div class="visually-hidden">
+            <h1>Juego interactivo de plataformas</h1>
+            <p>Controles del juego:</p>
+            <ul>
+                <li>Flecha izquierda: Mover personaje a la izquierda</li>
+                <li>Flecha derecha: Mover personaje a la derecha</li>
+                <li>Barra espaciadora: Saltar</li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        // Configuración básica del juego
+        const config = {
+            type: Phaser.AUTO,
+            parent: 'game-container',
+            width: 1280,
+            height: 640,
+            backgroundColor: '#2d2d2d',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 600 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        // Inicializar el juego
+        const game = new Phaser.Game(config);
+
+        // Variables globales para el jugador y los controles
+        let player;
+        let cursors;
+        let spaceBar;
+
+        function preload() {
+            // Cargar el archivo JSON del mapa exportado desde Tiled
+            this.load.tilemapTiledJSON('mapa', 'mapa.json');
+
+            // Cargar la imagen del tileset
+            this.load.image('tiles', 'spritesheet-tiles-default.png');
+
+            // Cargar el personaje como un spritesheet (cada frame es de 256x256 px)
+            this.load.spritesheet('ogre', 'Ogre.png', { frameWidth: 256, frameHeight: 256 });
+        }
+
+        function create() {
+            // Crear el tilemap usando la clave cargada en preload
+            const map = this.make.tilemap({ key: 'mapa' });
+
+            // Vincular el tileset (nombre en Tiled, clave de la imagen en Phaser)
+            // En mapa.json, el tileset se llama "background-1"
+            const tileset = map.addTilesetImage('background', 'tiles');
+
+            // Crear la capa usando el nombre definido en Tiled ("Tile Layer 1")
+            const layer = map.createLayer('Tile Layer 1', tileset, 0, 0);
+
+            // Activar colisiones para todos los tiles que conforman el mapa (evitando vacíos que Phaser interpreta como -1)
+            layer.setCollisionByExclusion([-1]);
+
+            // Crear el personaje (sprite con físicas)
+            player = this.physics.add.sprite(200, 100, 'ogre');
+
+            // Escalar un poco al personaje para que encaje mejor con los bloques
+            player.setScale(0.5);
+
+            // Ajustar que rebote ligeramente y no salga del mundo
+            player.setBounce(0.1);
+            player.setCollideWorldBounds(true);
+
+            // Añadir colisión entre el jugador y la capa del mapa
+            this.physics.add.collider(player, layer);
+
+            // Crear las animaciones del personaje
+            this.anims.create({
+                key: 'idle',
+                frames: this.anims.generateFrameNumbers('ogre', { start: 0, end: 0 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'walk',
+                frames: this.anims.generateFrameNumbers('ogre', { start: 0, end: 5 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            // Inicializar las teclas de dirección y el espacio
+            cursors = this.input.keyboard.createCursorKeys();
+            spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        }
+
+        function update() {
+            // Lógica de movimiento horizontal
+            if (cursors.left.isDown) {
+                player.setVelocityX(-250); // Mover a la izquierda
+                player.setFlipX(true); // Mirar a la izquierda
+                player.anims.play('walk', true); // Animar al caminar
+            } else if (cursors.right.isDown) {
+                player.setVelocityX(250); // Mover a la derecha
+                player.setFlipX(false); // Mirar a la derecha
+                player.anims.play('walk', true); // Animar al caminar
+            } else {
+                player.setVelocityX(0); // Detener el movimiento horizontal
+                player.anims.play('idle', true); // Animar estático
+            }
+
+            // Lógica de salto (Solo si está tocando el suelo/mapa)
+            if (spaceBar.isDown && player.body.blocked.down) {
+                player.setVelocityY(-450); // Aplicar velocidad vertical
+            }
+        }
+    </script>
+</body>
+
+</html>
