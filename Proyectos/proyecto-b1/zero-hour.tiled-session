@@ -1,0 +1,82 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "#background": {
+            "dynamicWrapping": false,
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
+        "#tileset-background": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "assets/tiles-city.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "assets/tileset-background.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "scenes/nivel-1.json": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 421.5,
+                "y": 171.5
+            }
+        },
+        "scenes/nivel-1.json#background": {
+            "scaleInDock": 1
+        },
+        "scenes/nivel-1.json#fdgfdg": {
+            "scaleInDock": 4
+        },
+        "scenes/nivel-1.json#nnnn": {
+            "scaleInDock": 1.5
+        },
+        "scenes/nivel-1.json#zzzz": {
+            "scaleInDock": 3
+        },
+        "scenes/nivel-2.json": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 619.3333333333333,
+                "y": 87.33333333333331
+            }
+        },
+        "scenes/nivel-2.json#background": {
+            "scaleInDock": 3
+        }
+    },
+    "last.imagePath": "/home/ferkhan/Workspace/NAGUA-UYAGUARI-FERNANDO-ALEXANDER-juegswgr1/Proyectos/proyecto-b1/assets",
+    "map.height": 15,
+    "map.lastUsedFormat": "json",
+    "map.tileHeight": 32,
+    "map.tileWidth": 32,
+    "map.width": 20,
+    "openFiles": [
+    ],
+    "project": "zero-hour.tiled-project",
+    "recentFiles": [
+        "assets/tileset-background.tsx",
+        "assets/tiles-city.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 1,
+    "tileset.spacing": 2,
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    },
+    "tileset.type": 0
+}
