@@ -45,57 +45,113 @@ export default class Menu extends Phaser.Scene {
     // Title
     this.titleText = this.add.text(w / 2, h / 4, 'NOVA SPACE', {
       fontSize: '150px',
-      fill: '#f4e3f3ff',
-      fontStyle: 'bold'
+      fill: '#ffffff',
+      fontStyle: 'bold',
+      stroke: '#9d4edd',
+      strokeThickness: 10,
+      shadow: { offsetX: 4, offsetY: 4, color: '#000000', blur: 10, stroke: true, fill: true }
     }).setOrigin(0.5);
 
+    // Floating animation for title
+    this.tweens.add({
+      targets: this.titleText,
+      y: h / 4 - 30,
+      duration: 2000,
+      ease: 'Sine.easeInOut',
+      yoyo: true,
+      repeat: -1
+    });
+
     // Instructions
-    const instructions = "Pilota con las teclas W A S D.\nApunta con el Mouse y Dispara con el Click Izquierdo.\nTu objetivo es destruir las naves alienígenas, \npara recoger las celdas de energía necesarias para que los \nmotores se recarguen para el salto espacial y regresar a casita.";
+    const instructions = "Pilota con las teclas W A S D.\nApunta con el Mouse y Dispara con el Click Izquierdo.\nTu objetivo es destruir las naves alienígenas,\npara recoger las celdas de energía necesarias para que los\nmotores se recarguen para el salto espacial y regresar a casa.";
     this.instructionsText = this.add.text(w / 2, h / 2, instructions, {
-      fontSize: '30px',
-      fill: '#f7e5faff',
-      fontStyle: 'bold',
-      align: 'center'
+      fontSize: '26px',
+      fill: '#ffffff',
+      fontStyle: 'normal',
+      align: 'center',
+      stroke: '#000000',
+      strokeThickness: 4,
+      shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 5, fill: true }
     }).setOrigin(0.5);
 
     // High Score
     const highScore = localStorage.getItem('novaSpaceHighScore') || 0;
-    this.highScoreText = this.add.text(w / 2, h / 2 + 200, `Puntuación Máxima: ${highScore}`, {
-      fontSize: '24px',
+    this.highScoreText = this.add.text(w / 2, h / 2 + 150, `PUNTUACIÓN MÁXIMA: ${highScore}`, {
+      fontSize: '28px',
       fontStyle: 'bold',
-      fill: '#f276fbff'
+      fill: '#ffffffff',
+      stroke: '#000000',
+      strokeThickness: 6,
+      shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 4, fill: true }
     }).setOrigin(0.5);
 
-    // Start prompt
-    this.startText = this.add.text(w / 2, h / 2 + 250, '[ PRESIONA CLICK O ENTER PARA COMENZAR ]', {
-      fontSize: '40px',
-      fill: '#bf9ff8ff',
-      fontStyle: 'bold'
+    // Start Button
+    this.startButton = this.add.text(w / 2, h / 2 + 250, ' COMENZAR ', {
+      fontSize: '36px',
+      fill: '#ffffff',
+      fontStyle: 'bold',
+      backgroundColor: '#9741aeff',
+      padding: { x: 20, y: 10 },
+      stroke: '#000000',
+      strokeThickness: 2,
+      shadow: { offsetX: 3, offsetY: 3, color: '#000000', blur: 5, fill: true }
     }).setOrigin(0.5);
+
+    this.startButton.setInteractive({ useHandCursor: true });
+
+    // Hover effects
+    this.startButton.on('pointerover', () => {
+      this.startButton.setStyle({ backgroundColor: '#9d4edd', fill: '#ffffcc' });
+      this.tweens.add({
+        targets: this.startButton,
+        scaleX: 1.1,
+        scaleY: 1.1,
+        duration: 150,
+        ease: 'Power2'
+      });
+    });
+
+    this.startButton.on('pointerout', () => {
+      this.startButton.setStyle({ backgroundColor: '#7b2cbf', fill: '#ffffff' });
+      this.tweens.add({
+        targets: this.startButton,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 150,
+        ease: 'Power2'
+      });
+    });
+
+    // Start prompt
+    // this.promptText = this.add.text(w / 2, h / 2 + 320, '[ PRESIONA ENTER O CLICK PARA COMENZAR ]', {
+    //   fontSize: '20px',
+    //   fill: '#e0aaff',
+    //   fontStyle: 'bold',
+    //   stroke: '#000000',
+    //   strokeThickness: 3
+    // }).setOrigin(0.5);
 
     // Resize event
     this.scale.on('resize', (gameSize) => {
       const gw = gameSize.width;
       const gh = gameSize.height;
       this.bg.setPosition(gw / 2, gh / 2).setDisplaySize(gw, gh);
-      this.titleText.setPosition(gw / 2, gh / 4);
+      this.titleText.setPosition(gw / 2, gh / 4 - 50);
       this.instructionsText.setPosition(gw / 2, gh / 2);
-      this.highScoreText.setPosition(gw / 2, gh / 2 + 100);
-      this.startText.setPosition(gw / 2, gh / 2 + 200);
+      this.highScoreText.setPosition(gw / 2, gh / 2 + 150);
+      this.startButton.setPosition(gw / 2, gh / 2 + 250);
+      this.promptText.setPosition(gw / 2, gh / 2 + 320);
     });
 
-    // Simple blink effect
+    // Simple pulse effect
     this.tweens.add({
-      targets: this.startText,
-      alpha: 0,
-      duration: 800,
-      ease: 'Cubic.easeInOut',
+      targets: this.promptText,
+      alpha: 0.3,
+      duration: 1000,
+      ease: 'Sine.easeInOut',
       yoyo: true,
       repeat: -1
     });
-
-    // Make start text interactive to start the game
-    this.startText.setInteractive();
 
     // Inputs to start game
     const startGame = () => {
@@ -104,9 +160,11 @@ export default class Menu extends Phaser.Scene {
     };
 
     this.input.keyboard.once('keydown-ENTER', startGame);
-    this.startText.once('pointerdown', startGame);
+    this.startButton.once('pointerdown', startGame);
 
     // Any general click unlocks the audio context without starting the game
-    this.input.on('pointerdown', unlockAndPlay);
+    this.input.on('pointerdown', () => {
+      unlockAndPlay();
+    });
   }
 }
