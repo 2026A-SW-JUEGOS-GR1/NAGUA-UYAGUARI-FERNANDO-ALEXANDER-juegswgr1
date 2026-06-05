@@ -95,6 +95,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   takeDamage() {
     if (this.isInvulnerable) return;
 
+    this.scene.sound.play('player-hit', { volume: 0.5 });
     this.health--;
     
     if (this.health <= 0) {
