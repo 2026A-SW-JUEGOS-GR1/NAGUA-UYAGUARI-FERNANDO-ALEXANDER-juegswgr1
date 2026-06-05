@@ -22,7 +22,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
     this.engineSprite.play('enemy_engine_anim');
 
-    this.speed = Phaser.Math.Between(80, 150);
+    this.speed = Phaser.Math.Between(150, 250);
   }
 
   preUpdate(time, delta) {

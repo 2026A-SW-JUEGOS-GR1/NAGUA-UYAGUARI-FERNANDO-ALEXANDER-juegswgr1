@@ -9,7 +9,7 @@ export default class Boot extends Phaser.Scene {
     this.load.tilemapTiledJSON('mapa_space', 'assets/maps/mapa_space.json');
 
     // Load backgrounds
-    this.load.image('bg_nebula', 'assets/images/backgrounds/Nebula Aqua-Pink.png');
+    this.load.image('bg_nebula', 'assets/images/backgrounds/Nebula Blue.png');
     this.load.image('bg_stars', 'assets/images/backgrounds/Stars Small_1.png');
     this.load.image('victory_bg', 'assets/images/backgrounds/victory_bg.jpg');
     this.load.image('game_over_bg', 'assets/images/backgrounds/game_over_bg.avif');
@@ -55,6 +55,6 @@ export default class Boot extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('GameOverScene');
+    this.scene.start('GameScene');
   }
 }
