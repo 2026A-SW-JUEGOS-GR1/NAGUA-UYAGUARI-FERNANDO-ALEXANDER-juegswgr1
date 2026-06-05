@@ -1,0 +1,58 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "#asdf": {
+            "scaleInDock": 4
+        },
+        "#asteroid": {
+            "scaleInDock": 1
+        },
+        "#asteroids": {
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
+        "#hhh": {
+            "scaleInDock": 5.5
+        },
+        "#rrr": {
+            "scaleInDock": 8
+        },
+        "#simple": {
+            "scaleInDock": 8
+        },
+        "mapa_space.json": {
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1671.212121212121,
+                "y": 1262.1212121212122
+            }
+        },
+        "mapa_space.json#asteroid": {
+            "scaleInDock": 1
+        }
+    },
+    "last.imagePath": "/home/ferkhan/Workspace/NAGUA-UYAGUARI-FERNANDO-ALEXANDER-juegswgr1/Examen B1/assets/images/tilesets",
+    "map.height": 20,
+    "map.lastUsedFormat": "json",
+    "map.tileHeight": 128,
+    "map.tileWidth": 128,
+    "map.width": 25,
+    "openFiles": [
+    ],
+    "project": "nova-space.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true,
+    "tileset.margin": 0,
+    "tileset.tileSize": {
+        "height": 128,
+        "width": 128
+    }
+}

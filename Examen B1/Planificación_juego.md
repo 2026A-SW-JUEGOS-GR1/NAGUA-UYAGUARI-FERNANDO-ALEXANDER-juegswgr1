@@ -1,4 +1,6 @@
 # Planificación
+## Nombre del juego
+Nova Space
 ## Stack Tecnológico
 - **Motor de Videojuegos:** Phaser 3 (Framework de desarrollo de videojuegos en 2D basado en JavaScript/TypeScript).    
 - **Herramienta de Diseño de Escenarios:** Tiled Map Editor (Generación de mapas basados en azulejos/tiles mediante la exportación de archivos estructurados JSON).    
