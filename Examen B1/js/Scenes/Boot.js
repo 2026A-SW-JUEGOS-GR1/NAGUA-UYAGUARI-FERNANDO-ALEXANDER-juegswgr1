@@ -26,9 +26,15 @@ export default class Boot extends Phaser.Scene {
     });
 
     // Load projectiles and effects
-    this.load.image('projectile', 'assets/images/projectiles/Nautolan - Bullet.png');
+    this.load.spritesheet('projectile', 'assets/images/projectiles/Nautolan - Bullet.png', {
+      frameWidth: 9,
+      frameHeight: 12
+    });
     this.load.image('power_cell', 'assets/images/power_cell/Item_Powerup_Weapon_Special_2.png');
-    this.load.image('explosion', 'assets/images/effects/explosion.png');
+    this.load.spritesheet('explosion', "assets/images/enemies/Kla'ed - Frigate - Destruction.png", {
+      frameWidth: 64,
+      frameHeight: 64
+    });
 
     // Load sounds (if available, using a placeholder if we need)
     this.load.audio('bgm', 'assets/sounds/spaceship shooter .mp3');

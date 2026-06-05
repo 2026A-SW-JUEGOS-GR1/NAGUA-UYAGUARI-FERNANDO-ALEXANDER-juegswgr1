@@ -8,6 +8,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.setCollideWorldBounds(true); // Will be bounded by the Tiled map dimensions
     this.body.setSize(100, 100);
+    this.body.setDrag(400); 
+    this.body.setMaxVelocity(400);
 
     // Create the engine sprite to attach on top of the base sprite
     this.engineSprite = scene.add.sprite(x, y, 'player_engine');
@@ -21,7 +23,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       });
     }
 
-    this.speed = 300;
     this.health = 3;
     this.isInvulnerable = false;
 
@@ -42,46 +43,36 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     if (!this.active) return;
 
     // Movement Logic
-    this.body.setVelocity(0);
+    let ax = 0;
+    let ay = 0;
+    const accel = 1200;
 
-    let isMoving = false;
-    let vx = 0;
-    let vy = 0;
+    if (this.keys.left.isDown) ax = -accel;
+    else if (this.keys.right.isDown) ax = accel;
 
-    if (this.keys.left.isDown) {
-      vx = -this.speed;
-      isMoving = true;
-    } else if (this.keys.right.isDown) {
-      vx = this.speed;
-      isMoving = true;
-    }
+    if (this.keys.up.isDown) ay = -accel;
+    else if (this.keys.down.isDown) ay = accel;
 
-    if (this.keys.up.isDown) {
-      vy = -this.speed;
-      isMoving = true;
-    } else if (this.keys.down.isDown) {
-      vy = this.speed;
-      isMoving = true;
-    }
+    this.body.setAcceleration(ax, ay);
 
-    this.body.setVelocity(vx, vy);
-
-    if (isMoving) {
-      const targetAngle = Phaser.Math.Angle.Between(0, 0, vx, vy) + Math.PI / 2;
-      this.setRotation(targetAngle);
+    if (this.body.velocity.lengthSq() > 10) {
+      const targetAngle = this.body.velocity.angle() + Math.PI / 2;
+      // Interpolate rotation for an even smoother feel
+      const diff = Phaser.Math.Angle.Wrap(targetAngle - this.rotation);
+      this.rotation += diff * 0.2;
     }
 
     // Engine logic
     this.engineSprite.setPosition(this.x, this.y);
     this.engineSprite.setRotation(this.rotation);
-    if (isMoving) {
+    if (ax !== 0 || ay !== 0) {
       if (!this.engineSprite.anims.isPlaying) {
         this.engineSprite.play('player_engine_anim');
         this.engineSprite.setVisible(true);
       }
     } else {
       this.engineSprite.stop();
-      this.engineSprite.setVisible(false); // Propulsor apagado
+      this.engineSprite.setVisible(false);
     }
 
     // Shooting
@@ -92,13 +83,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   shoot() {
-    // Generate a projectile
-    const proj = new Projectile(this.scene, this.x, this.y - 50);
-    this.scene.projectilesGroup.add(proj);
-    proj.fire(this.x, this.y - 50);
+    const offsetX = Math.cos(this.rotation - Math.PI / 2) * 50;
+    const offsetY = Math.sin(this.rotation - Math.PI / 2) * 50;
 
-    // Play SFX if we want (or handle in scene)
-    // this.scene.sound.play('shoot_sfx');
+    const proj = new Projectile(this.scene, this.x + offsetX, this.y + offsetY);
+    this.scene.projectilesGroup.add(proj);
+    proj.fire(this.x + offsetX, this.y + offsetY, this.rotation);
   }
 
   takeDamage() {

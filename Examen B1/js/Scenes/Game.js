@@ -18,9 +18,24 @@ export default class Game extends Phaser.Scene {
     // 3. Map (Tiled)
     const map = this.make.tilemap({ key: 'mapa_space' });
     const tileset = map.addTilesetImage('asteroid', 'asteroid_tiles');
-    // We assume the layer name is 'Tile Layer 1' based on JSON
-    this.obstaclesLayer = map.createLayer('Tile Layer 1', tileset, 0, 0);
-    this.obstaclesLayer.setCollisionByProperty({ solid: true }); // From JSON properties
+    // We assume the layer name is 'Asteroid Layer' based on JSON
+    this.obstaclesLayer = map.createLayer('Asteroid Layer', tileset, 0, 0);
+        
+    // Create custom static hitboxes to make asteroid collision more forgiving
+    this.asteroidsGroup = this.physics.add.staticGroup();
+    this.obstaclesLayer.forEachTile(tile => {
+      if (tile.properties.solid) {
+        // Tile is 128x128. We shrink the hitbox to 80x80
+        const size = 80;
+        const offsetX = tile.pixelX + (128 - size) / 2;
+        const offsetY = tile.pixelY + (128 - size) / 2;
+        
+        // Create an invisible rectangle for the hitbox
+        const hitbox = this.add.rectangle(offsetX, offsetY, size, size).setOrigin(0, 0);
+        this.physics.add.existing(hitbox, true);
+        this.asteroidsGroup.add(hitbox);
+      }
+    });
 
     // 4. Groups
     this.projectilesGroup = this.physics.add.group();
@@ -50,18 +65,27 @@ export default class Game extends Phaser.Scene {
       loop: true
     });
 
+    if (!this.anims.exists('explosion_anim')) {
+      this.anims.create({
+        key: 'explosion_anim',
+        frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 8 }),
+        frameRate: 15,
+        repeat: 0
+      });
+    }
+
     // 8. Collisions
     // Player vs Obstacles
-    this.physics.add.collider(this.player, this.obstaclesLayer, () => {
+    this.physics.add.collider(this.player, this.asteroidsGroup, () => {
       this.player.takeDamage();
       this.updateHUD();
     });
 
     // Enemy vs Obstacles
-    this.physics.add.collider(this.enemiesGroup, this.obstaclesLayer);
+    this.physics.add.collider(this.enemiesGroup, this.asteroidsGroup);
 
     // Projectile vs Obstacles
-    this.physics.add.collider(this.projectilesGroup, this.obstaclesLayer, (proj, obs) => {
+    this.physics.add.collider(this.projectilesGroup, this.asteroidsGroup, (proj, obs) => {
       proj.destroy();
     });
 
@@ -76,10 +100,14 @@ export default class Game extends Phaser.Scene {
     // Projectile vs Enemies
     this.physics.add.overlap(this.projectilesGroup, this.enemiesGroup, (proj, enemy) => {
       proj.destroy();
-      
+
       // Spawn explosion effect
       const explosion = this.add.sprite(enemy.x, enemy.y, 'explosion');
-      this.time.delayedCall(300, () => explosion.destroy());
+      explosion.setRotation(enemy.rotation);
+      explosion.play('explosion_anim');
+      explosion.on('animationcomplete', () => {
+        explosion.destroy();
+      });
 
       // Drop Item (30% chance)
       if (Phaser.Math.Between(1, 100) <= 30) {

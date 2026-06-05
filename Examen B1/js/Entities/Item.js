@@ -4,6 +4,8 @@ export default class Item extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
+    this.setScale(0.6);
+
     // Minor random float for the item drop to look better
     const vX = Phaser.Math.Between(-30, 30);
     const vY = Phaser.Math.Between(-30, 30);

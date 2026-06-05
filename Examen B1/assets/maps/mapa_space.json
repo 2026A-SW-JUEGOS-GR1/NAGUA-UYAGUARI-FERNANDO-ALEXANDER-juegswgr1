@@ -25,7 +25,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":20,
          "id":1,
-         "name":"Tile Layer 1",
+         "name":"Asteroid Layer",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -62,16 +62,16 @@
                      "objects":[
                             {
                              "ellipse":true,
-                             "height":128.104166666667,
-                             "id":3,
+                             "height":112.75,
+                             "id":16,
                              "name":"",
                              "opacity":1,
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":128.333333333333,
-                             "x":-0.333333333333332,
-                             "y":2.22044604925031e-15
+                             "width":111.75,
+                             "x":6.25,
+                             "y":9.5
                             }],
                      "opacity":1,
                      "type":"objectgroup",
