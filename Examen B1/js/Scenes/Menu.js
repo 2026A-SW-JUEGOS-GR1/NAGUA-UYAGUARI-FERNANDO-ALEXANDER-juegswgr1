@@ -15,7 +15,7 @@ export default class Menu extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Instructions
-    const instructions = "Pilota con las Flechas del teclado.\nDispara con la Barra Espaciadora.\nSobrevive al asedio y recoge celdas de energía para ganar.";
+    const instructions = "Pilota con las teclas W A S D.\nDispara con la Barra Espaciadora.\nSobrevive al asedio y recoge celdas de energía para ganar.";
     this.add.text(400, 300, instructions, {
       fontSize: '20px',
       fill: '#cccccc',

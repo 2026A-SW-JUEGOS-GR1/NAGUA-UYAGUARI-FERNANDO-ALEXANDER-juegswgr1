@@ -26,7 +26,7 @@ export default class Boot extends Phaser.Scene {
     });
 
     // Load projectiles and effects
-    this.load.image('projectile', 'assets/images/projectiles/Nairan - Bolt.png');
+    this.load.image('projectile', 'assets/images/projectiles/Nautolan - Bullet.png');
     this.load.image('power_cell', 'assets/images/power_cell/Item_Powerup_Weapon_Special_2.png');
     this.load.image('explosion', 'assets/images/effects/explosion.png');
 

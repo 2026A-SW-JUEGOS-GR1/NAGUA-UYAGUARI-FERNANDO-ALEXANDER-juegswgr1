@@ -25,7 +25,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.health = 3;
     this.isInvulnerable = false;
 
-    this.cursors = scene.input.keyboard.createCursorKeys();
+    this.keys = scene.input.keyboard.addKeys({
+      up: Phaser.Input.Keyboard.KeyCodes.W,
+      down: Phaser.Input.Keyboard.KeyCodes.S,
+      left: Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D
+    });
     this.spaceBar = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
     this.lastFired = 0;
@@ -40,25 +45,35 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.body.setVelocity(0);
 
     let isMoving = false;
+    let vx = 0;
+    let vy = 0;
 
-    if (this.cursors.left.isDown) {
-      this.body.setVelocityX(-this.speed);
+    if (this.keys.left.isDown) {
+      vx = -this.speed;
       isMoving = true;
-    } else if (this.cursors.right.isDown) {
-      this.body.setVelocityX(this.speed);
+    } else if (this.keys.right.isDown) {
+      vx = this.speed;
       isMoving = true;
     }
 
-    if (this.cursors.up.isDown) {
-      this.body.setVelocityY(-this.speed);
+    if (this.keys.up.isDown) {
+      vy = -this.speed;
       isMoving = true;
-    } else if (this.cursors.down.isDown) {
-      this.body.setVelocityY(this.speed);
+    } else if (this.keys.down.isDown) {
+      vy = this.speed;
       isMoving = true;
+    }
+
+    this.body.setVelocity(vx, vy);
+
+    if (isMoving) {
+      const targetAngle = Phaser.Math.Angle.Between(0, 0, vx, vy) + Math.PI / 2;
+      this.setRotation(targetAngle);
     }
 
     // Engine logic
     this.engineSprite.setPosition(this.x, this.y);
+    this.engineSprite.setRotation(this.rotation);
     if (isMoving) {
       if (!this.engineSprite.anims.isPlaying) {
         this.engineSprite.play('player_engine_anim');
@@ -92,8 +107,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.health--;
     
     if (this.health <= 0) {
-      this.destroyPlayer();
       this.scene.triggerGameOver();
+      this.destroyPlayer();
     } else {
       // Trigger invulnerability blink
       this.isInvulnerable = true;
