@@ -58,7 +58,7 @@ export default class Game extends Phaser.Scene {
     // 6. HUD
     this.score = 0;
     this.cells = 0;
-    this.maxCells = 10;
+    this.maxCells = 1;
 
     this.scoreText = this.add.text(20, 20, 'Score: 0', { fontSize: '24px', fill: '#fff' }).setScrollFactor(0);
     this.cellsText = this.add.text(20, 50, `Celdas: 0 / ${this.maxCells}`, { fontSize: '24px', fill: '#0f0' }).setScrollFactor(0);

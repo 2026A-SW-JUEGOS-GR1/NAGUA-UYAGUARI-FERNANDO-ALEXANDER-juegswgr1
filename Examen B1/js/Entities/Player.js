@@ -45,6 +45,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.spaceBar = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
     this.lastFired = 0;
+    this.engineSound = scene.sound.add('engine-sound', { loop: true, volume: 0.1 });
   }
 
   preUpdate(time, delta) {
@@ -80,9 +81,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.engineSprite.play('player_engine_anim');
         this.engineSprite.setVisible(true);
       }
+      if (!this.engineSound.isPlaying) {
+        this.engineSound.play();
+      }
     } else {
       this.engineSprite.stop();
       this.engineSprite.setVisible(false);
+      if (this.engineSound.isPlaying) {
+        this.engineSound.stop();
+      }
     }
 
     // Shooting
@@ -135,6 +142,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.body.checkCollision.none = true;
     
     if (this.engineSprite) this.engineSprite.destroy();
+    if (this.engineSound && this.engineSound.isPlaying) {
+      this.engineSound.stop();
+    }
 
     this.setTexture('player_destruction');
     this.play('player_destruction_anim');
