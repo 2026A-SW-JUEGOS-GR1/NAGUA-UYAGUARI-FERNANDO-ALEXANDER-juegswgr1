@@ -89,6 +89,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const proj = new Projectile(this.scene, this.x + offsetX, this.y + offsetY);
     this.scene.projectilesGroup.add(proj);
     proj.fire(this.x + offsetX, this.y + offsetY, this.rotation);
+    this.scene.sound.play('laser-shot', { volume: 0.5 });
   }
 
   takeDamage() {

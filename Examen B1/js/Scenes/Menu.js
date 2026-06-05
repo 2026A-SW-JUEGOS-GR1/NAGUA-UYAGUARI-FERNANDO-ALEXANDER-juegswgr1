@@ -11,6 +11,38 @@ export default class Menu extends Phaser.Scene {
     this.bgNebula = this.add.tileSprite(0, 0, w, h, 'bg_nebula').setOrigin(0, 0);
     this.bgStars = this.add.tileSprite(0, 0, w, h, 'bg_stars').setOrigin(0, 0);
 
+    // Helper function to play BGM
+    const playBGM = () => {
+      let bgm = this.sound.get('bgm');
+      if (!bgm) {
+        bgm = this.sound.add('bgm', { loop: true, volume: 0.5 });
+      }
+      if (!bgm.isPlaying) {
+        bgm.play();
+      }
+    };
+
+    // Function to unlock audio context and play BGM
+    const unlockAndPlay = () => {
+      if (this.sound.context && this.sound.context.state === 'suspended') {
+        this.sound.context.resume().then(() => {
+          playBGM();
+        }).catch(err => {
+          console.log('Error resuming sound context:', err);
+        });
+      } else {
+        playBGM();
+      }
+    };
+
+    // Play BGM if not already playing
+    playBGM();
+
+    // Listen to unlock event if sound is locked
+    if (this.sound.locked) {
+      this.sound.once('unlocked', playBGM);
+    }
+
     // Title
     this.titleText = this.add.text(w / 2, h / 4, 'NOVA SPACE', {
       fontSize: '64px',
@@ -61,12 +93,19 @@ export default class Menu extends Phaser.Scene {
       repeat: -1
     });
 
-    // Inputs to start
-    this.input.keyboard.once('keydown-ENTER', () => {
+    // Make start text interactive to start the game
+    this.startText.setInteractive();
+
+    // Inputs to start game
+    const startGame = () => {
+      unlockAndPlay();
       this.scene.start('GameScene');
-    });
-    this.input.once('pointerdown', () => {
-      this.scene.start('GameScene');
-    });
+    };
+
+    this.input.keyboard.once('keydown-ENTER', startGame);
+    this.startText.once('pointerdown', startGame);
+
+    // Any general click unlocks the audio context without starting the game
+    this.input.on('pointerdown', unlockAndPlay);
   }
 }

@@ -13,9 +13,14 @@ export default class Game extends Phaser.Scene {
     this.bgNebula = this.add.tileSprite(0, 0, width, height, 'bg_nebula').setOrigin(0, 0).setScrollFactor(0);
     this.bgStars = this.add.tileSprite(0, 0, width, height, 'bg_stars').setOrigin(0, 0).setScrollFactor(0);
 
-    // 2. Play BGM
-    // this.bgm = this.sound.add('bgm', { loop: true, volume: 0.5 });
-    // this.bgm.play();
+    // 2. Play BGM if not already playing
+    let bgm = this.sound.get('bgm');
+    if (!bgm) {
+      bgm = this.sound.add('bgm', { loop: true, volume: 0.5 });
+      bgm.play();
+    } else if (!bgm.isPlaying) {
+      bgm.play();
+    }
 
     // 3. Map (Tiled)
     const map = this.make.tilemap({ key: 'mapa_space' });
@@ -105,6 +110,7 @@ export default class Game extends Phaser.Scene {
 
       // Spawn explosion effect
       const explosion = this.add.sprite(enemy.x, enemy.y, 'explosion');
+      this.sound.play('enemy-explosion', { volume: 0.5 });
       explosion.setRotation(enemy.rotation);
       explosion.play('explosion_anim');
       explosion.on('animationcomplete', () => {
@@ -194,7 +200,9 @@ export default class Game extends Phaser.Scene {
 
   triggerGameOver() {
     this.saveHighScore();
-    // if (this.bgm) this.bgm.stop();
+    const bgm = this.sound.get('bgm');
+    if (bgm) bgm.stop();
+    this.sound.play('game-over', { volume: 0.5 });
     this.scene.start('GameOverScene', { score: this.score });
   }
 

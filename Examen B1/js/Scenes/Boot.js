@@ -37,8 +37,11 @@ export default class Boot extends Phaser.Scene {
       frameHeight: 64
     });
 
-    // Load sounds (if available, using a placeholder if we need)
-    this.load.audio('bgm', 'assets/sounds/spaceship shooter .mp3');
+    // Load sounds 
+    this.load.audio('bgm', 'assets/sounds/bgm-loop.mp3');
+    this.load.audio('laser-shot', 'assets/sounds/laser-shot.mp3');
+    this.load.audio('enemy-explosion', 'assets/sounds/enemy-explosion.mp3');
+    this.load.audio('game-over', 'assets/sounds/game-over.mp3');
   }
 
   create() {
