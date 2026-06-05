@@ -37,11 +37,11 @@ export default class GameOver extends Phaser.Scene {
     });
 
     this.restartBtn.on('pointerdown', () => {
-      this.scene.start('GameScene');
+      this.scene.start('MenuScene');
     });
 
     this.input.keyboard.once('keydown-ENTER', () => {
-      this.scene.start('GameScene');
+      this.scene.start('MenuScene');
     });
 
     const resizeHandler = (gameSize) => {

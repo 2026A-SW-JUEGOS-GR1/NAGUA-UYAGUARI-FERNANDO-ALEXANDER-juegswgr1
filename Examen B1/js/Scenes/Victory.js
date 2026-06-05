@@ -47,12 +47,12 @@ export default class Victory extends Phaser.Scene {
 
     this.restartBtn.on('pointerdown', () => {
       this.victorySound.stop();
-      this.scene.start('GameScene');
+      this.scene.start('MenuScene');
     });
 
     this.input.keyboard.once('keydown-ENTER', () => {
       this.victorySound.stop();
-      this.scene.start('GameScene');
+      this.scene.start('MenuScene');
     });
 
     const resizeHandler = (gameSize) => {

@@ -153,4 +153,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       if (callback) callback();
     });
   }
+
+  destroy(fromScene) {
+    if (this.engineSound && this.engineSound.isPlaying) {
+      this.engineSound.stop();
+    }
+    super.destroy(fromScene);
+  }
 }
