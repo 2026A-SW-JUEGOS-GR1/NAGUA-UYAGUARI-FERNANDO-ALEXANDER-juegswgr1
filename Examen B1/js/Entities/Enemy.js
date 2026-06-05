@@ -22,7 +22,18 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
     this.engineSprite.play('enemy_engine_anim');
 
-    this.speed = Phaser.Math.Between(150, 250);
+    this.speed = Phaser.Math.Between(100, 200);
+    this.lastShotTime = 0;
+    this.shootInterval = Phaser.Math.Between(1500, 3000); // 1.5 to 3 seconds
+
+    if (!scene.anims.exists('enemy_proj_anim')) {
+      scene.anims.create({
+        key: 'enemy_proj_anim',
+        frames: scene.anims.generateFrameNumbers('enemy_projectile', { start: 0, end: 4 }),
+        frameRate: 10,
+        repeat: -1
+      });
+    }
   }
 
   preUpdate(time, delta) {
@@ -40,7 +51,43 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
       
       // Move vectorially towards player
       this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
+
+      // Shooting logic
+      if (time > this.lastShotTime + this.shootInterval) {
+        this.shoot(angle);
+        this.lastShotTime = time;
+      }
     }
+  }
+
+  shoot(angle) {
+    if (!this.active) return;
+    
+    // Shoot from slightly ahead of the enemy
+    const offsetDist = 20;
+    const spawnX = this.x + Math.cos(angle) * offsetDist;
+    const spawnY = this.y + Math.sin(angle) * offsetDist;
+
+    const projectile = this.scene.physics.add.sprite(spawnX, spawnY, 'enemy_projectile');
+    // Set a slightly smaller hitbox for the projectile if needed, or use default 16x16
+    this.scene.enemyProjectilesGroup.add(projectile);
+    
+    // Make the projectile visually larger
+    projectile.setScale(2);
+    
+    // Set the rotation of the projectile to match its direction
+    projectile.setRotation(angle + Math.PI / 2);
+    
+    projectile.play('enemy_proj_anim');
+    
+    this.scene.physics.velocityFromRotation(angle, 350, projectile.body.velocity);
+    
+    // Destroy projectile after 3 seconds
+    this.scene.time.delayedCall(3000, () => {
+      if (projectile && projectile.active) {
+        projectile.destroy();
+      }
+    });
   }
 
   destroyEnemy() {

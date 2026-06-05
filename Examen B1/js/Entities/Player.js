@@ -28,7 +28,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       scene.anims.create({
         key: 'player_destruction_anim',
         frames: scene.anims.generateFrameNumbers('player_destruction', { start: 0, end: 17 }),
-        frameRate: 10,
+        frameRate: 8,
         repeat: 0
       });
     }

@@ -46,6 +46,7 @@ export default class Game extends Phaser.Scene {
 
     // 4. Groups
     this.projectilesGroup = this.physics.add.group();
+    this.enemyProjectilesGroup = this.physics.add.group();
     this.enemiesGroup = this.physics.add.group();
     this.itemsGroup = this.physics.add.group();
 
@@ -130,6 +131,18 @@ export default class Game extends Phaser.Scene {
       proj.destroy();
     });
 
+    // Enemy Projectile vs Obstacles
+    this.physics.add.collider(this.enemyProjectilesGroup, this.asteroidsGroup, (proj, obs) => {
+      proj.destroy();
+    });
+
+    // Enemy Projectile vs Player
+    this.physics.add.collider(this.player, this.enemyProjectilesGroup, (player, proj) => {
+      proj.destroy();
+      player.takeDamage();
+      this.updateHUD();
+    });
+
     // Player vs Enemies
     this.physics.add.collider(this.player, this.enemiesGroup, (player, enemy) => {
       player.takeDamage();
@@ -146,6 +159,10 @@ export default class Game extends Phaser.Scene {
       const explosion = this.add.sprite(enemy.x, enemy.y, 'explosion');
       this.sound.play('enemy-explosion', { volume: 0.5 });
       explosion.setRotation(enemy.rotation);
+      
+      // Make explosion animation size match the enemy's visual size
+      // explosion.setScale(1.25); 
+      
       explosion.play('explosion_anim');
       explosion.on('animationcomplete', () => {
         explosion.destroy();

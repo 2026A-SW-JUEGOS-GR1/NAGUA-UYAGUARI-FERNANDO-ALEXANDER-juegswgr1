@@ -38,7 +38,11 @@ export default class Boot extends Phaser.Scene {
       frameWidth: 9,
       frameHeight: 12
     });
-    this.load.image('power_cell', 'assets/images/power_cell/Item_Powerup_Weapon_Special_2.png');
+    this.load.spritesheet('enemy_projectile', 'assets/images/projectiles/Nairan - Bolt.png', {
+      frameWidth: 9,
+      frameHeight: 9
+    });
+    this.load.image('power_cell', 'assets/images/items/power-cell.png');
     this.load.spritesheet('explosion', "assets/images/enemies/Kla'ed - Frigate - Destruction.png", {
       frameWidth: 64,
       frameHeight: 64
