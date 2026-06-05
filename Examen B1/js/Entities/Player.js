@@ -42,7 +42,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D
     });
-    this.spaceBar = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
     this.lastFired = 0;
     this.engineSound = scene.sound.add('engine-sound', { loop: true, volume: 0.1 });
@@ -53,30 +52,38 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     if (!this.active || this.isDestroyed) return;
 
-    // Movement Logic
-    let ax = 0;
-    let ay = 0;
+    // 1. Rotation towards mouse
+    const pointer = this.scene.input.activePointer;
+    const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    const targetAngle = Phaser.Math.Angle.Between(this.x, this.y, worldPoint.x, worldPoint.y);
+    
+    this.rotation = targetAngle + Math.PI / 2;
+
+    // 2. Movement Logic
     const accel = 1200;
+    
+    let vecX = 0;
+    let vecY = 0;
 
-    if (this.keys.left.isDown) ax = -accel;
-    else if (this.keys.right.isDown) ax = accel;
+    // Absolute movement: WASD moves relative to screen/world, not ship direction
+    if (this.keys.up.isDown) vecY -= 1;
+    if (this.keys.down.isDown) vecY += 1;
+    if (this.keys.left.isDown) vecX -= 1;
+    if (this.keys.right.isDown) vecX += 1;
 
-    if (this.keys.up.isDown) ay = -accel;
-    else if (this.keys.down.isDown) ay = accel;
-
-    this.body.setAcceleration(ax, ay);
-
-    if (this.body.velocity.lengthSq() > 10) {
-      const targetAngle = this.body.velocity.angle() + Math.PI / 2;
-      // Interpolate rotation for an even smoother feel
-      const diff = Phaser.Math.Angle.Wrap(targetAngle - this.rotation);
-      this.rotation += diff * 0.2;
+    // Normalize vector so diagonal movement isn't faster
+    const length = Math.sqrt(vecX * vecX + vecY * vecY);
+    if (length > 0) {
+      vecX /= length;
+      vecY /= length;
     }
+
+    this.body.setAcceleration(vecX * accel, vecY * accel);
 
     // Engine logic
     this.engineSprite.setPosition(this.x, this.y);
     this.engineSprite.setRotation(this.rotation);
-    if (ax !== 0 || ay !== 0) {
+    if (vecX !== 0 || vecY !== 0) {
       if (!this.engineSprite.anims.isPlaying) {
         this.engineSprite.play('player_engine_anim');
         this.engineSprite.setVisible(true);
@@ -92,8 +99,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       }
     }
 
-    // Shooting
-    if (this.spaceBar.isDown && time > this.lastFired) {
+    // Shooting with left click
+    if (pointer.isDown && time > this.lastFired) {
       this.shoot();
       this.lastFired = time + 250; // Fire rate
     }
