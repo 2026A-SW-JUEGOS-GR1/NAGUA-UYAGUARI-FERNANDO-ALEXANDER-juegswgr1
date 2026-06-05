@@ -6,7 +6,7 @@ export default class Projectile extends Phaser.Physics.Arcade.Sprite {
     
     this.setScale(2);
 
-    this.speed = 600;
+    this.speed = 1200;
 
     if (!scene.anims.exists('projectile_anim')) {
       scene.anims.create({

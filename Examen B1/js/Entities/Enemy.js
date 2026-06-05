@@ -3,6 +3,8 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, 'enemy_base');
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    
+    this.body.setSize(30, 30);
 
     // Add engine sprite on top as a child or just composite
     // For simplicity, we just use the base sprite for physics and position,

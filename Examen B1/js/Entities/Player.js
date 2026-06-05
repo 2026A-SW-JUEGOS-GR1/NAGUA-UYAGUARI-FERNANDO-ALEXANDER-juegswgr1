@@ -7,7 +7,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setCollideWorldBounds(true); // Will be bounded by the Tiled map dimensions
-    this.body.setSize(100, 100);
+    this.body.setSize(50, 50);
     this.body.setDrag(400); 
     this.body.setMaxVelocity(400);
 
