@@ -8,12 +8,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.setCollideWorldBounds(true); // Will be bounded by the Tiled map dimensions
     this.body.setSize(50, 50);
-    this.body.setDrag(400); 
+    this.body.setDrag(400);
     this.body.setMaxVelocity(400);
+    this.body.maxSpeed = 400;
 
     // Create the engine sprite to attach on top of the base sprite
     this.engineSprite = scene.add.sprite(x, y, 'player_engine');
-    
+
     if (!scene.anims.exists('player_engine_anim')) {
       scene.anims.create({
         key: 'player_engine_anim',
@@ -42,7 +43,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D
     });
-    
+
     this.lastFired = 0;
     this.engineSound = scene.sound.add('engine-sound', { loop: true, volume: 0.1 });
   }
@@ -56,12 +57,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const pointer = this.scene.input.activePointer;
     const worldPoint = this.scene.cameras.main.getWorldPoint(pointer.x, pointer.y);
     const targetAngle = Phaser.Math.Angle.Between(this.x, this.y, worldPoint.x, worldPoint.y);
-    
-    this.rotation = targetAngle + Math.PI / 2;
+
+    let desiredRotation = targetAngle + Math.PI / 2;
+    let diff = Phaser.Math.Angle.Wrap(desiredRotation - this.rotation);
+    this.rotation += diff * 0.015 * delta;
 
     // 2. Movement Logic
     const accel = 1200;
-    
+
     let vecX = 0;
     let vecY = 0;
 
@@ -107,12 +110,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   shoot() {
-    const offsetX = Math.cos(this.rotation - Math.PI / 2) * 50;
-    const offsetY = Math.sin(this.rotation - Math.PI / 2) * 50;
-
-    const proj = new Projectile(this.scene, this.x + offsetX, this.y + offsetY);
+    const proj = new Projectile(this.scene, this.x, this.y);
     this.scene.projectilesGroup.add(proj);
-    proj.fire(this.x + offsetX, this.y + offsetY, this.rotation);
+    proj.fire(this.x, this.y, this.rotation);
     this.scene.sound.play('laser-shot', { volume: 0.5 });
   }
 
@@ -121,7 +121,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.scene.sound.play('player-hit', { volume: 0.5 });
     this.health--;
-    
+
     if (this.health <= 0) {
       this.scene.triggerGameOver();
     } else {
@@ -147,7 +147,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.body.setVelocity(0, 0);
     this.body.setAcceleration(0, 0);
     this.body.checkCollision.none = true;
-    
+
     if (this.engineSprite) this.engineSprite.destroy();
     if (this.engineSound && this.engineSound.isPlaying) {
       this.engineSound.stop();

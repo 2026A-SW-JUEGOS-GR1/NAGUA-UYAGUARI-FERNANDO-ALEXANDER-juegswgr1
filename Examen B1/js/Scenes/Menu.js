@@ -8,8 +8,7 @@ export default class Menu extends Phaser.Scene {
     const h = this.scale.height;
 
     // Add backgrounds
-    this.bgNebula = this.add.tileSprite(0, 0, w, h, 'bg_nebula').setOrigin(0, 0);
-    this.bgStars = this.add.tileSprite(0, 0, w, h, 'bg_stars').setOrigin(0, 0);
+    this.bg = this.add.image(w / 2, h / 2, 'menu_bg').setDisplaySize(w, h);
 
     // Helper function to play BGM
     const playBGM = () => {
@@ -45,38 +44,40 @@ export default class Menu extends Phaser.Scene {
 
     // Title
     this.titleText = this.add.text(w / 2, h / 4, 'NOVA SPACE', {
-      fontSize: '64px',
-      fill: '#ffffff',
+      fontSize: '150px',
+      fill: '#f4e3f3ff',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // Instructions
-    const instructions = "Pilota con las teclas W A S D.\nDispara con la Barra Espaciadora.\nSobrevive al asedio y recoge celdas de energía para ganar.";
+    const instructions = "Pilota con las teclas W A S D.\nApunta con el Mouse y Dispara con el Click Izquierdo.\nTu objetivo es destruir las naves alienígenas, \npara recoger las celdas de energía necesarias para que los \nmotores se recarguen para el salto espacial y regresar a casita.";
     this.instructionsText = this.add.text(w / 2, h / 2, instructions, {
-      fontSize: '20px',
-      fill: '#cccccc',
+      fontSize: '30px',
+      fill: '#f7e5faff',
+      fontStyle: 'bold',
       align: 'center'
     }).setOrigin(0.5);
 
     // High Score
     const highScore = localStorage.getItem('novaSpaceHighScore') || 0;
-    this.highScoreText = this.add.text(w / 2, h / 2 + 100, `Puntuación Máxima: ${highScore}`, {
+    this.highScoreText = this.add.text(w / 2, h / 2 + 200, `Puntuación Máxima: ${highScore}`, {
       fontSize: '24px',
-      fill: '#ffdd00'
+      fontStyle: 'bold',
+      fill: '#f276fbff'
     }).setOrigin(0.5);
 
     // Start prompt
-    this.startText = this.add.text(w / 2, h / 2 + 200, '[ PRESIONA CLICK O ENTER PARA COMENZAR ]', {
-      fontSize: '24px',
-      fill: '#00ff00'
+    this.startText = this.add.text(w / 2, h / 2 + 250, '[ PRESIONA CLICK O ENTER PARA COMENZAR ]', {
+      fontSize: '30px',
+      fill: '#bf9ff8ff',
+      fontStyle: 'bold'
     }).setOrigin(0.5);
 
     // Resize event
     this.scale.on('resize', (gameSize) => {
       const gw = gameSize.width;
       const gh = gameSize.height;
-      this.bgNebula.setSize(gw, gh);
-      this.bgStars.setSize(gw, gh);
+      this.bg.setPosition(gw / 2, gh / 2).setDisplaySize(gw, gh);
       this.titleText.setPosition(gw / 2, gh / 4);
       this.instructionsText.setPosition(gw / 2, gh / 2);
       this.highScoreText.setPosition(gw / 2, gh / 2 + 100);

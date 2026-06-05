@@ -11,6 +11,9 @@ export default class Boot extends Phaser.Scene {
     // Load backgrounds
     this.load.image('bg_nebula', 'assets/images/backgrounds/Nebula Aqua-Pink.png');
     this.load.image('bg_stars', 'assets/images/backgrounds/Stars Small_1.png');
+    this.load.image('victory_bg', 'assets/images/backgrounds/victory_bg.jpg');
+    this.load.image('game_over_bg', 'assets/images/backgrounds/game_over_bg.avif');
+    this.load.image('menu_bg', 'assets/images/backgrounds/menu_gb.jpg');
 
     // Load player sprites
     this.load.image('player_base', 'assets/images/player/Nairan - Battlecruiser - Base.png');
@@ -52,6 +55,6 @@ export default class Boot extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('GameScene');
+    this.scene.start('GameOverScene');
   }
 }

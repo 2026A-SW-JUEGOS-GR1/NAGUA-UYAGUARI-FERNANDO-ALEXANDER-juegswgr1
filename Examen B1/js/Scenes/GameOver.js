@@ -11,20 +11,12 @@ export default class GameOver extends Phaser.Scene {
     const w = this.scale.width;
     const h = this.scale.height;
 
-    this.titleText = this.add.text(w / 2, h / 2 - 100, 'GAME OVER', {
-      fontSize: '64px',
-      fill: '#ff0000',
-      fontStyle: 'bold'
-    }).setOrigin(0.5);
+    this.bg = this.add.image(w / 2, h / 2, 'game_over_bg').setDisplaySize(w, h);
 
-    this.scoreText = this.add.text(w / 2, h / 2, `Puntuación Final: ${this.finalScore}`, {
-      fontSize: '32px',
-      fill: '#ffffff'
-    }).setOrigin(0.5);
-
-    this.restartBtn = this.add.text(w / 2, h / 2 + 150, '[ REINICIAR ]', {
-      fontSize: '32px',
-      fill: '#00ff00'
+    this.restartBtn = this.add.text(w / 2, h / 2 + 250, '[ REINICIAR ]', {
+      fontSize: '40px',
+      fontStyle: 'bold',
+      fill: '#bf9ff8ff'
     }).setOrigin(0.5).setInteractive();
 
     this.tweens.add({
@@ -48,6 +40,7 @@ export default class GameOver extends Phaser.Scene {
       if (!this.scene.isActive()) return;
       const gw = gameSize.width;
       const gh = gameSize.height;
+      this.bg.setPosition(gw / 2, gh / 2).setDisplaySize(gw, gh);
       this.titleText.setPosition(gw / 2, gh / 2 - 100);
       this.scoreText.setPosition(gw / 2, gh / 2);
       this.restartBtn.setPosition(gw / 2, gh / 2 + 150);
