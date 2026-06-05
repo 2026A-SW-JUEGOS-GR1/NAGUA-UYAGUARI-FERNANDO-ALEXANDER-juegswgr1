@@ -218,7 +218,8 @@ export default class Game extends Phaser.Scene {
 
   triggerVictory() {
     this.saveHighScore();
-    // if (this.bgm) this.bgm.stop();
+    const bgm = this.sound.get('bgm');
+    if (bgm) bgm.stop();
     this.scene.start('VictoryScene', { score: this.score });
   }
 

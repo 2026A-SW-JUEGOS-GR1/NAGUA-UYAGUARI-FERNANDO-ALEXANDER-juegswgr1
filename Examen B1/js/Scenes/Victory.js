@@ -11,13 +11,22 @@ export default class Victory extends Phaser.Scene {
     const w = this.scale.width;
     const h = this.scale.height;
 
-    this.titleText = this.add.text(w / 2, h / 2 - 100, '¡VICTORIA!', {
+    this.victorySound = this.sound.add('victory', { loop: true, volume: 0.5 });
+    this.victorySound.play();
+
+    this.titleText = this.add.text(w / 2, h / 2 - 150, '¡VICTORIA!', {
       fontSize: '64px',
       fill: '#ffff00',
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.scoreText = this.add.text(w / 2, h / 2, `Puntuación Final: ${this.finalScore}`, {
+    this.msgText = this.add.text(w / 2, h / 2 - 50, '¡Celdas de energía al máximo!\nLa nave puede hacer el salto temporal\npara regresar a casa.', {
+      fontSize: '24px',
+      fill: '#aaffaa',
+      align: 'center'
+    }).setOrigin(0.5);
+
+    this.scoreText = this.add.text(w / 2, h / 2 + 50, `Puntuación Final: ${this.finalScore}`, {
       fontSize: '32px',
       fill: '#ffffff'
     }).setOrigin(0.5);
@@ -37,19 +46,22 @@ export default class Victory extends Phaser.Scene {
     });
 
     this.restartBtn.on('pointerdown', () => {
-      this.scene.start('MenuScene');
+      this.victorySound.stop();
+      this.scene.start('GameScene');
     });
 
     this.input.keyboard.once('keydown-ENTER', () => {
-      this.scene.start('MenuScene');
+      this.victorySound.stop();
+      this.scene.start('GameScene');
     });
 
     const resizeHandler = (gameSize) => {
       if (!this.scene.isActive()) return;
       const gw = gameSize.width;
       const gh = gameSize.height;
-      this.titleText.setPosition(gw / 2, gh / 2 - 100);
-      this.scoreText.setPosition(gw / 2, gh / 2);
+      this.titleText.setPosition(gw / 2, gh / 2 - 150);
+      this.msgText.setPosition(gw / 2, gh / 2 - 50);
+      this.scoreText.setPosition(gw / 2, gh / 2 + 50);
       this.restartBtn.setPosition(gw / 2, gh / 2 + 150);
     };
     this.scale.on('resize', resizeHandler, this);
