@@ -8,8 +8,9 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    // 1. Background (TileSprite)
-    this.bg = this.add.tileSprite(0, 0, 3200, 2560, 'bg_stars').setOrigin(0, 0);
+    // 1. Backgrounds (TileSprites) for Parallax
+    this.bgNebula = this.add.tileSprite(0, 0, 800, 600, 'bg_nebula').setOrigin(0, 0).setScrollFactor(0);
+    this.bgStars = this.add.tileSprite(0, 0, 800, 600, 'bg_stars').setOrigin(0, 0).setScrollFactor(0);
 
     // 2. Play BGM
     // this.bgm = this.sound.add('bgm', { loop: true, volume: 0.5 });
@@ -136,8 +137,11 @@ export default class Game extends Phaser.Scene {
   update() {
     // Parallax background based on player movement
     if (this.player && this.player.active) {
-      this.bg.tilePositionX = this.cameras.main.scrollX * 0.3;
-      this.bg.tilePositionY = this.cameras.main.scrollY * 0.3;
+      this.bgNebula.tilePositionX = this.cameras.main.scrollX * 0.1;
+      this.bgNebula.tilePositionY = this.cameras.main.scrollY * 0.1;
+      
+      this.bgStars.tilePositionX = this.cameras.main.scrollX * 0.3;
+      this.bgStars.tilePositionY = this.cameras.main.scrollY * 0.3;
     }
   }
 

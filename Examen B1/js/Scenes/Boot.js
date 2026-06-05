@@ -9,6 +9,7 @@ export default class Boot extends Phaser.Scene {
     this.load.tilemapTiledJSON('mapa_space', 'assets/maps/mapa_space.json');
 
     // Load backgrounds
+    this.load.image('bg_nebula', 'assets/images/backgrounds/Nebula Aqua-Pink.png');
     this.load.image('bg_stars', 'assets/images/backgrounds/Stars Small_1.png');
 
     // Load player sprites

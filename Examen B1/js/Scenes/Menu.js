@@ -4,7 +4,8 @@ export default class Menu extends Phaser.Scene {
   }
 
   create() {
-    // Add background
+    // Add backgrounds
+    this.add.tileSprite(0, 0, 800, 600, 'bg_nebula').setOrigin(0, 0);
     this.add.tileSprite(0, 0, 800, 600, 'bg_stars').setOrigin(0, 0);
 
     // Title
