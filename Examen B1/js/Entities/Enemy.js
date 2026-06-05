@@ -73,7 +73,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.scene.enemyProjectilesGroup.add(projectile);
     
     // Make the projectile visually larger
-    projectile.setScale(2);
+    projectile.setScale(3);
     
     // Set the rotation of the projectile to match its direction
     projectile.setRotation(angle + Math.PI / 2);

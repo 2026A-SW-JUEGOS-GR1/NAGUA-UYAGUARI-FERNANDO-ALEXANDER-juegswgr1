@@ -34,13 +34,31 @@ export default class Nivel2Scene extends Phaser.Scene {
         this.score          = 0;
         this.lives          = INITIAL_LIVES;
         this.isInvulnerable = false;
+        this.targetScore    = 1000; // Objetivo de puntos
+        this.timeLeft       = 60;  // Tiempo límite (segundos)
+
         this.registry.events.emit('score-changed', this.score);
         this.registry.events.emit('lives-changed', this.lives);
         this.registry.events.emit('dash-ready',    true);
+        this.registry.events.emit('time-changed',  this.timeLeft);
+
+        this.timeTimer = this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+                this.timeLeft--;
+                this.registry.events.emit('time-changed', this.timeLeft);
+                if (this.timeLeft <= 0) {
+                    this.gameOver();
+                }
+            },
+            callbackScope: this,
+            loop: true
+        });
 
         this.registry.events.on('enemy-killed', (points) => {
             this.score += points;
             this.registry.events.emit('score-changed', this.score);
+            this.checkWinCondition();
         });
         this.events.once('shutdown', () => {
             this.registry.events.off('enemy-killed');
@@ -53,7 +71,7 @@ export default class Nivel2Scene extends Phaser.Scene {
         this.capaSuelo.setCollisionByExclusion([-1, 0]);
 
         // ── Jugador 2 ──
-        this.player = this.physics.add.sprite(80, 300, 'p2-idle', 0);
+        this.player = this.physics.add.sprite(450, 50, 'p2-idle', 0);
         this.player.setCollideWorldBounds(true);
         this.player.setBounce(0.05);
         this.player.body.setSize(22, 46).setOffset(53, 50);
@@ -140,6 +158,7 @@ export default class Nivel2Scene extends Phaser.Scene {
         // ── Cámara ──
         this.cameras.main.setBounds(0, 0, this.mapa.widthInPixels, this.mapa.heightInPixels);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+        this.cameras.main.setZoom(1.5);
 
         // ── Controles ──
         this.keys = this.input.keyboard.addKeys({
@@ -166,12 +185,8 @@ export default class Nivel2Scene extends Phaser.Scene {
         this.handleMovement();
         this.handleJump();
 
-        if (Phaser.Input.Keyboard.JustDown(this.shiftKey) && this.canDash && !this.isDashing) {
+        if ((Phaser.Input.Keyboard.JustDown(this.shiftKey) || Phaser.Input.Keyboard.JustDown(this.attackKey)) && this.canDash && !this.isDashing) {
             this.startDash();
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(this.attackKey)) {
-            this.doMeleeAttack(time);
         }
 
         this.enemies.children.iterate((enemy) => {
@@ -313,6 +328,7 @@ export default class Nivel2Scene extends Phaser.Scene {
 
         this.score += SCORE_PER_COLLECTIBLE;
         this.registry.events.emit('score-changed', this.score);
+        this.checkWinCondition();
 
         this.time.delayedCall(500, () => this.spawnCollectibleAtRandomSpot());
     }
@@ -365,7 +381,14 @@ export default class Nivel2Scene extends Phaser.Scene {
     }
 
     onPlayerHitEnemy(player, enemy) {
-        if (this.isInvulnerable || enemy.isDead) return;
+        if (enemy.isDead) return;
+
+        if (this.isDashing) {
+            enemy.takeDamage(MELEE_DAMAGE);
+            return;
+        }
+
+        if (this.isInvulnerable) return;
 
         const dir = player.x < enemy.x ? -1 : 1;
         player.setVelocity(PLAYER_KNOCKBACK_X * dir, PLAYER_KNOCKBACK_Y);
@@ -419,7 +442,7 @@ export default class Nivel2Scene extends Phaser.Scene {
             this.gameOver();
         } else {
             this.player.setVelocity(0, 0);
-            this.player.setPosition(80, 300);
+            this.player.setPosition(450, 50);
             this.jumpsUsed   = 0;
             this.isDashing   = false;
             this.canDash     = true;
@@ -429,6 +452,17 @@ export default class Nivel2Scene extends Phaser.Scene {
             this.player.clearTint();
             this.registry.events.emit('dash-ready', true);
         }
+    }
+
+    checkWinCondition() {
+        if (this.score >= this.targetScore) {
+            this.winGame();
+        }
+    }
+
+    winGame() {
+        this.scene.stop('UIScene');
+        this.scene.start('CreditosScene');
     }
 
     gameOver() {

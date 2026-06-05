@@ -12,7 +12,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.tilemapTiledJSON('map-nivel1', 'assets/maps/nivel-1-new.json');
         this.load.tilemapTiledJSON('map-nivel2', 'assets/maps/nivel-2.json');
         this.load.image('tiles-nivel1', 'assets/tilesets/background.png');
-        this.load.image('tiles-nivel2', 'assets/tilesets/background-industrial.png');
+        this.load.image('tiles-nivel2', 'assets/tilesets/background.png');
 
         this.load.spritesheet('player1', 'assets/sprites/player-1.png', {
             frameWidth:  P1_FRAME_WIDTH,

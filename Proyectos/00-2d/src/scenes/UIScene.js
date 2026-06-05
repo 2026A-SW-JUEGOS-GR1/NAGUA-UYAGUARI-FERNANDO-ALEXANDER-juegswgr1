@@ -34,6 +34,14 @@ export default class UIScene extends Phaser.Scene {
             padding: { x: 8, y: 4 }
         });
 
+        this.timeText = this.add.text(16, 160, '', {
+            fontSize: '20px',
+            color: '#ffaaaa',
+            backgroundColor: '#00000099',
+            padding: { x: 12, y: 6 }
+        });
+        this.timeText.setVisible(false);
+
         this.updateLives(INITIAL_LIVES);
 
         const reg = this.registry.events;
@@ -53,8 +61,13 @@ export default class UIScene extends Phaser.Scene {
                 this.dashText.setColor('#888888');
             }
         };
+        this.timeHandler = (time) => {
+            this.timeText.setVisible(true);
+            this.timeText.setText('Tiempo: ' + time + 's');
+        };
 
         reg.on('score-changed', this.scoreHandler);
+        reg.on('time-changed',  this.timeHandler);
         reg.on('lives-changed', this.livesHandler);
         reg.on('dash-ready',    this.dashReadyHandler);
 
@@ -62,6 +75,7 @@ export default class UIScene extends Phaser.Scene {
             reg.off('score-changed', this.scoreHandler);
             reg.off('lives-changed', this.livesHandler);
             reg.off('dash-ready',    this.dashReadyHandler);
+            reg.off('time-changed',  this.timeHandler);
         });
     }
 
