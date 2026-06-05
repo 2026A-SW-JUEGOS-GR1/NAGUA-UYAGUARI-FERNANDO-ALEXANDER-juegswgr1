@@ -13,6 +13,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.tilemapTiledJSON('map-nivel2', 'assets/maps/nivel-2.json');
         this.load.image('tiles-nivel1', 'assets/tilesets/background.png');
         this.load.image('tiles-nivel2', 'assets/tilesets/background.png');
+        this.load.image('bg-real', 'assets/background/background.jpg');
 
         this.load.spritesheet('player1', 'assets/sprites/player-1.png', {
             frameWidth:  P1_FRAME_WIDTH,
@@ -106,6 +107,6 @@ export default class BootScene extends Phaser.Scene {
         gs.generateTexture('star', 24, 24);
         gs.destroy();
 
-        this.scene.start('Nivel2Scene');
+        this.scene.start('Nivel1Scene');
     }
 }

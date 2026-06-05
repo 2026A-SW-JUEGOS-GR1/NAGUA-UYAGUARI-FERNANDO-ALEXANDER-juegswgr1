@@ -34,7 +34,7 @@ export default class Nivel2Scene extends Phaser.Scene {
         this.score          = 0;
         this.lives          = INITIAL_LIVES;
         this.isInvulnerable = false;
-        this.targetScore    = 1000; // Objetivo de puntos
+        this.targetScore    = 300; // Objetivo de puntos
         this.timeLeft       = 60;  // Tiempo límite (segundos)
 
         this.registry.events.emit('score-changed', this.score);
@@ -67,6 +67,12 @@ export default class Nivel2Scene extends Phaser.Scene {
         // ── Tilemap ──
         this.mapa = this.make.tilemap({ key: 'map-nivel2' });
         const tileset = this.mapa.addTilesetImage('background', 'tiles-nivel2');
+
+        // ── Fondo ──
+        // Añadimos la imagen de fondo antes de la capa de suelo para que se dibuje por detrás
+        this.bg = this.add.image(0, 0, 'bg-real').setOrigin(0, 0);
+        this.bg.setDisplaySize(this.mapa.widthInPixels, this.mapa.heightInPixels);
+
         this.capaSuelo = this.mapa.createLayer('Tile Layer 1', tileset, 0, 0);
         this.capaSuelo.setCollisionByExclusion([-1, 0]);
 
@@ -114,8 +120,8 @@ export default class Nivel2Scene extends Phaser.Scene {
             runChildUpdate: false
         });
 
-        this.enemies.add(new PatrolEnemy(this, 80, 390, 10, 160));
-        this.enemies.add(new PatrolEnemy(this, 350, 390, 290, 415));
+        this.enemies.add(new PatrolEnemy(this, 30, 40, 20, 110));
+        this.enemies.add(new PatrolEnemy(this, 800, 40, 820, 1070));
         this.enemies.add(new ChaserEnemy(this, 800, 295));
 
         this.physics.add.collider(this.enemies, this.capaSuelo);
@@ -193,7 +199,7 @@ export default class Nivel2Scene extends Phaser.Scene {
             if (enemy) enemy.updateAI(this.player, time, _delta);
         });
 
-        if (this.player.y > GAME_HEIGHT + 100) {
+        if (this.player.y >= this.mapa.heightInPixels - 51) {
             this.loseLife();
         }
     }

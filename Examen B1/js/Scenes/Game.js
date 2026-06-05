@@ -59,7 +59,7 @@ export default class Game extends Phaser.Scene {
     // 6. HUD
     this.score = 0;
     this.cells = 0;
-    this.maxCells = 10;
+    this.maxCells = 5;
 
     // Contenedor UI para mantenerlo en primer plano sin scroll
     this.hudContainer = this.add.container(0, 0).setScrollFactor(0).setDepth(100);

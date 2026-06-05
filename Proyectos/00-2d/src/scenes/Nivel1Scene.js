@@ -49,6 +49,13 @@ export default class Nivel1Scene extends Phaser.Scene {
         // ── Tilemap ──
         this.mapa = this.make.tilemap({ key: 'map-nivel1' });
         const tileset = this.mapa.addTilesetImage('background', 'tiles-nivel1');
+
+        // ── Fondo ──
+        // Añadimos la imagen de fondo antes de la capa de suelo para que se dibuje por detrás
+        this.bg = this.add.image(0, 0, 'bg-real').setOrigin(0, 0);
+        // Ajustar el tamaño si es necesario, por ejemplo cubriendo todo el mapa:
+        this.bg.setDisplaySize(this.mapa.widthInPixels, this.mapa.heightInPixels);
+
         this.capaSuelo = this.mapa.createLayer('Tile Layer 1', tileset, 0, 0);
         this.capaSuelo.setCollisionByExclusion([-1, 0]);
 
@@ -97,7 +104,7 @@ export default class Nivel1Scene extends Phaser.Scene {
         });
 
         // Plataforma izquierda (cols 0-5, fila 13) → superficie y=416
-        this.enemies.add(new PatrolEnemy(this, 80, 390, 10, 160));
+        this.enemies.add(new PatrolEnemy(this,  800, 35, 800, 1020));
         // Plataforma central-izq (cols 9-13, fila 13) → superficie y=416
         this.enemies.add(new PatrolEnemy(this, 350, 390, 290, 415));
         // Plataforma grande (cols 20-32, fila 10) → superficie y=320
@@ -181,7 +188,7 @@ export default class Nivel1Scene extends Phaser.Scene {
             if (enemy) enemy.updateAI(this.player, time, _delta);
         });
 
-        if (this.player.y > GAME_HEIGHT + 100) {
+        if (this.player.y > this.mapa.heightInPixels - 40) {
             this.loseLife();
         }
     }
