@@ -68,7 +68,7 @@ export default class Menu extends Phaser.Scene {
 
     // Start prompt
     this.startText = this.add.text(w / 2, h / 2 + 250, '[ PRESIONA CLICK O ENTER PARA COMENZAR ]', {
-      fontSize: '30px',
+      fontSize: '40px',
       fill: '#bf9ff8ff',
       fontStyle: 'bold'
     }).setOrigin(0.5);

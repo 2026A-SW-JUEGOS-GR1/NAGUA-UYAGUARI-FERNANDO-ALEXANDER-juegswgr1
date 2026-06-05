@@ -55,6 +55,6 @@ export default class Boot extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('GameOverScene');
+    this.scene.start('GameScene');
   }
 }

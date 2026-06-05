@@ -60,9 +60,43 @@ export default class Game extends Phaser.Scene {
     this.cells = 0;
     this.maxCells = 1;
 
-    this.scoreText = this.add.text(20, 20, 'Score: 0', { fontSize: '24px', fill: '#fff' }).setScrollFactor(0);
-    this.cellsText = this.add.text(20, 50, `Celdas: 0 / ${this.maxCells}`, { fontSize: '24px', fill: '#0f0' }).setScrollFactor(0);
-    this.healthText = this.add.text(20, 80, `Vidas: ${this.player.health}`, { fontSize: '24px', fill: '#f00' }).setScrollFactor(0);
+    // Contenedor UI para mantenerlo en primer plano sin scroll
+    this.hudContainer = this.add.container(0, 0).setScrollFactor(0).setDepth(100);
+
+    // Fondo del HUD
+    this.hudBg = this.add.graphics();
+    this.hudBg.fillStyle(0x111122, 0.8);
+    this.hudBg.lineStyle(2, 0x444488, 1);
+    this.hudBg.fillRect(0, 0, width, 60);
+    this.hudBg.strokeRect(0, 0, width, 60);
+    this.hudContainer.add(this.hudBg);
+
+    // Estilo de texto común
+    const textStyle = {
+      fontFamily: '"Impact", "Arial Black", sans-serif',
+      fontSize: '24px',
+      fill: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 4,
+      shadow: { offsetX: 2, offsetY: 2, color: '#000', blur: 2, stroke: true, fill: true }
+    };
+
+    // Vidas (Izquierda)
+    this.healthIcon = this.add.image(30, 30, 'player_base').setScale(0.5).setAngle(-90);
+    this.healthText = this.add.text(60, 14, `Vidas: ${this.player.health}`, textStyle);
+    this.healthText.setTint(0xff6666, 0xff0000, 0xff0000, 0xff6666);
+    this.hudContainer.add([this.healthIcon, this.healthText]);
+
+    // Score (Centro)
+    this.scoreText = this.add.text(width / 2, 14, `SCORE: 0`, textStyle).setOrigin(0.5, 0);
+    this.scoreText.setTint(0xffffaa, 0xffcc00, 0xffcc00, 0xffffaa);
+    this.hudContainer.add(this.scoreText);
+
+    // Celdas (Derecha)
+    this.cellsIcon = this.add.image(width - 190, 30, 'power_cell').setScale(0.5);
+    this.cellsText = this.add.text(width - 160, 14, `Celdas: 0 / ${this.maxCells}`, textStyle);
+    this.cellsText.setTint(0xaaeeaa, 0x00ff00, 0x00ff00, 0xaaeeaa);
+    this.hudContainer.add([this.cellsIcon, this.cellsText]);
 
     // 7. Spawner
     this.enemySpawnTimer = this.time.addEvent({
@@ -147,6 +181,18 @@ export default class Game extends Phaser.Scene {
       const gh = gameSize.height;
       this.bgNebula.setSize(gw, gh);
       this.bgStars.setSize(gw, gh);
+      
+      // Resize HUD
+      if (this.hudBg) {
+        this.hudBg.clear();
+        this.hudBg.fillStyle(0x111122, 0.8);
+        this.hudBg.lineStyle(2, 0x444488, 1);
+        this.hudBg.fillRect(0, 0, gw, 60);
+        this.hudBg.strokeRect(0, 0, gw, 60);
+      }
+      if (this.scoreText) this.scoreText.setX(gw / 2);
+      if (this.cellsIcon) this.cellsIcon.setX(gw - 190);
+      if (this.cellsText) this.cellsText.setX(gw - 160);
     };
     this.scale.on('resize', resizeHandler, this);
     this.events.on('shutdown', () => {
@@ -193,7 +239,7 @@ export default class Game extends Phaser.Scene {
   }
 
   updateHUD() {
-    this.scoreText.setText(`Score: ${this.score}`);
+    this.scoreText.setText(`SCORE: ${this.score}`);
     this.cellsText.setText(`Celdas: ${this.cells} / ${this.maxCells}`);
     this.healthText.setText(`Vidas: ${this.player.health}`);
   }

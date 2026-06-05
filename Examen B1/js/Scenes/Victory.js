@@ -23,8 +23,8 @@ export default class Victory extends Phaser.Scene {
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.msgText = this.add.text(w / 2, h / 2, '¡Celdas de energía al máximo!\nLa nave pude hacer el salto temporal\npara regresar a casa.', {
-      fontSize: '35px',
+    this.msgText = this.add.text(w / 2, h / 2, '¡Celdas de energía al máximo!\nLa nave pudo hacer el salto temporal\npara regresar a casa.', {
+      fontSize: '40px',
       fill: '#ffffffff',
       fontStyle: 'bold',
       align: 'center'
