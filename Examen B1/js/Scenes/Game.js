@@ -203,7 +203,17 @@ export default class Game extends Phaser.Scene {
     const bgm = this.sound.get('bgm');
     if (bgm) bgm.stop();
     this.sound.play('game-over', { volume: 0.5 });
-    this.scene.start('GameOverScene', { score: this.score });
+    
+    this.enemySpawnTimer.remove();
+    this.enemiesGroup.children.iterate(enemy => {
+      enemy.speed = 0;
+      enemy.body.setVelocity(0, 0);
+      if (enemy.engineSprite) enemy.engineSprite.stop();
+    });
+
+    this.player.explode(() => {
+      this.scene.start('GameOverScene', { score: this.score });
+    });
   }
 
   triggerVictory() {

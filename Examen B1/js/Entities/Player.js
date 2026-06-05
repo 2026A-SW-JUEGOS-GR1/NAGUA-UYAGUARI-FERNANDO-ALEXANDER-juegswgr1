@@ -23,8 +23,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       });
     }
 
+    if (!scene.anims.exists('player_destruction_anim')) {
+      scene.anims.create({
+        key: 'player_destruction_anim',
+        frames: scene.anims.generateFrameNumbers('player_destruction', { start: 0, end: 17 }),
+        frameRate: 10,
+        repeat: 0
+      });
+    }
+
     this.health = 3;
     this.isInvulnerable = false;
+    this.isDestroyed = false;
 
     this.keys = scene.input.keyboard.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -40,7 +50,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   preUpdate(time, delta) {
     super.preUpdate(time, delta);
 
-    if (!this.active) return;
+    if (!this.active || this.isDestroyed) return;
 
     // Movement Logic
     let ax = 0;
@@ -100,7 +110,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
     if (this.health <= 0) {
       this.scene.triggerGameOver();
-      this.destroyPlayer();
     } else {
       // Trigger invulnerability blink
       this.isInvulnerable = true;
@@ -119,8 +128,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  destroyPlayer() {
-    this.engineSprite.destroy();
-    this.destroy();
+  explode(callback) {
+    this.isDestroyed = true;
+    this.body.setVelocity(0, 0);
+    this.body.setAcceleration(0, 0);
+    this.body.checkCollision.none = true;
+    
+    if (this.engineSprite) this.engineSprite.destroy();
+
+    this.setTexture('player_destruction');
+    this.play('player_destruction_anim');
+    this.on('animationcomplete', () => {
+      this.destroy();
+      if (callback) callback();
+    });
   }
 }

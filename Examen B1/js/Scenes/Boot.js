@@ -18,6 +18,10 @@ export default class Boot extends Phaser.Scene {
       frameWidth: 128,
       frameHeight: 128
     });
+    this.load.spritesheet('player_destruction', 'assets/images/player/Nairan - Battlecruiser  -  Destruction.png', {
+      frameWidth: 128,
+      frameHeight: 128
+    });
 
     // Load enemy sprites
     this.load.image('enemy_base', "assets/images/enemies/Kla'ed - Frigate - Base.png");
