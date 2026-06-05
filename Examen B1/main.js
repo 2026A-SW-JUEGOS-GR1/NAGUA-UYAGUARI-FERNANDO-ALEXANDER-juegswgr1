@@ -6,9 +6,8 @@ import GameOver from './js/Scenes/GameOver.js';
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
   parent: 'game-container',
+  resolution: window.devicePixelRatio || 1,
   physics: {
     default: 'arcade',
     arcade: {
@@ -18,8 +17,9 @@ const config = {
   },
   scene: [Boot, Menu, Game, Victory, GameOver],
   scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH
+    mode: Phaser.Scale.RESIZE,
+    width: '100%',
+    height: '100%'
   }
 };
 

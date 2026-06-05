@@ -4,12 +4,15 @@ export default class Menu extends Phaser.Scene {
   }
 
   create() {
+    const w = this.scale.width;
+    const h = this.scale.height;
+
     // Add backgrounds
-    this.add.tileSprite(0, 0, 800, 600, 'bg_nebula').setOrigin(0, 0);
-    this.add.tileSprite(0, 0, 800, 600, 'bg_stars').setOrigin(0, 0);
+    this.bgNebula = this.add.tileSprite(0, 0, w, h, 'bg_nebula').setOrigin(0, 0);
+    this.bgStars = this.add.tileSprite(0, 0, w, h, 'bg_stars').setOrigin(0, 0);
 
     // Title
-    this.add.text(400, 150, 'NOVA SPACE', {
+    this.titleText = this.add.text(w / 2, h / 4, 'NOVA SPACE', {
       fontSize: '64px',
       fill: '#ffffff',
       fontStyle: 'bold'
@@ -17,7 +20,7 @@ export default class Menu extends Phaser.Scene {
 
     // Instructions
     const instructions = "Pilota con las teclas W A S D.\nDispara con la Barra Espaciadora.\nSobrevive al asedio y recoge celdas de energía para ganar.";
-    this.add.text(400, 300, instructions, {
+    this.instructionsText = this.add.text(w / 2, h / 2, instructions, {
       fontSize: '20px',
       fill: '#cccccc',
       align: 'center'
@@ -25,20 +28,32 @@ export default class Menu extends Phaser.Scene {
 
     // High Score
     const highScore = localStorage.getItem('novaSpaceHighScore') || 0;
-    this.add.text(400, 400, `Puntuación Máxima: ${highScore}`, {
+    this.highScoreText = this.add.text(w / 2, h / 2 + 100, `Puntuación Máxima: ${highScore}`, {
       fontSize: '24px',
       fill: '#ffdd00'
     }).setOrigin(0.5);
 
     // Start prompt
-    const startText = this.add.text(400, 500, '[ PRESIONA CLICK O ENTER PARA COMENZAR ]', {
+    this.startText = this.add.text(w / 2, h / 2 + 200, '[ PRESIONA CLICK O ENTER PARA COMENZAR ]', {
       fontSize: '24px',
       fill: '#00ff00'
     }).setOrigin(0.5);
 
+    // Resize event
+    this.scale.on('resize', (gameSize) => {
+      const gw = gameSize.width;
+      const gh = gameSize.height;
+      this.bgNebula.setSize(gw, gh);
+      this.bgStars.setSize(gw, gh);
+      this.titleText.setPosition(gw / 2, gh / 4);
+      this.instructionsText.setPosition(gw / 2, gh / 2);
+      this.highScoreText.setPosition(gw / 2, gh / 2 + 100);
+      this.startText.setPosition(gw / 2, gh / 2 + 200);
+    });
+
     // Simple blink effect
     this.tweens.add({
-      targets: startText,
+      targets: this.startText,
       alpha: 0,
       duration: 800,
       ease: 'Cubic.easeInOut',

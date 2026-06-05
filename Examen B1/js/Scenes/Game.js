@@ -8,9 +8,10 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    const { width, height } = this.scale;
     // 1. Backgrounds (TileSprites) for Parallax
-    this.bgNebula = this.add.tileSprite(0, 0, 800, 600, 'bg_nebula').setOrigin(0, 0).setScrollFactor(0);
-    this.bgStars = this.add.tileSprite(0, 0, 800, 600, 'bg_stars').setOrigin(0, 0).setScrollFactor(0);
+    this.bgNebula = this.add.tileSprite(0, 0, width, height, 'bg_nebula').setOrigin(0, 0).setScrollFactor(0);
+    this.bgStars = this.add.tileSprite(0, 0, width, height, 'bg_stars').setOrigin(0, 0).setScrollFactor(0);
 
     // 2. Play BGM
     // this.bgm = this.sound.add('bgm', { loop: true, volume: 0.5 });
@@ -131,6 +132,19 @@ export default class Game extends Phaser.Scene {
       if (this.cells >= this.maxCells) {
         this.triggerVictory();
       }
+    });
+
+    // Resize event
+    const resizeHandler = (gameSize) => {
+      if (!this.scene.isActive()) return;
+      const gw = gameSize.width;
+      const gh = gameSize.height;
+      this.bgNebula.setSize(gw, gh);
+      this.bgStars.setSize(gw, gh);
+    };
+    this.scale.on('resize', resizeHandler, this);
+    this.events.on('shutdown', () => {
+      this.scale.off('resize', resizeHandler, this);
     });
   }
 
