@@ -15,7 +15,7 @@ export default class CreditosScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         const credits = [
-            'Nightwing 2D',
+            '',
             '',
             'Materia: Juegos Interactivos',
             'Facultad de Ingeniería de Sistemas - EPN',

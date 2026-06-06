@@ -8,7 +8,12 @@ export default class MenuScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#1a1a2e');
 
-        this.add.text(GAME_WIDTH / 2, 120, 'NIGHTWING 2D', {
+        this.sound.stopByKey('gameover');
+        if (!this.sound.get('bgm') || !this.sound.get('bgm').isPlaying) {
+            this.sound.play('bgm', { loop: true });
+        }
+
+        this.add.text(GAME_WIDTH / 2, 120, 'Zero Hour', {
             fontSize: '64px',
             fontStyle: 'bold',
             color: '#ffffff',

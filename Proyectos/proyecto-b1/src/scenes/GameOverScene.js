@@ -13,6 +13,9 @@ export default class GameOverScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#3d0000');
 
+        this.sound.stopByKey('bgm');
+        this.sound.play('gameover');
+
         this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 100, 'GAME OVER', {
             fontSize: '72px',
             fontStyle: 'bold',
@@ -35,7 +38,13 @@ export default class GameOverScene extends Phaser.Scene {
 
         retry.on('pointerover', () => retry.setStyle({ color: '#ffffff' }));
         retry.on('pointerout',  () => retry.setStyle({ color: '#ffff00' }));
-        retry.on('pointerdown', () => this.scene.start(this.fromScene));
+        retry.on('pointerdown', () => {
+            this.sound.stopByKey('gameover');
+            if (!this.sound.get('bgm') || !this.sound.get('bgm').isPlaying) {
+                this.sound.play('bgm', { loop: true });
+            }
+            this.scene.start(this.fromScene);
+        });
 
         const menu = this.add.text(GAME_WIDTH / 2 + 130, GAME_HEIGHT / 2 + 100, 'Menú', {
             fontSize: '28px',
@@ -46,6 +55,9 @@ export default class GameOverScene extends Phaser.Scene {
 
         menu.on('pointerover', () => menu.setStyle({ color: '#ffffff' }));
         menu.on('pointerout',  () => menu.setStyle({ color: '#ffff00' }));
-        menu.on('pointerdown', () => this.scene.start('MenuScene'));
+        menu.on('pointerdown', () => {
+            this.sound.stopByKey('gameover');
+            this.scene.start('MenuScene');
+        });
     }
 }

@@ -20,12 +20,6 @@ export default class UIScene extends Phaser.Scene {
             padding: { x: 12, y: 6 }
         });
 
-        this.add.text(16, 100, 'WASD: mover | Shift: dash | Espacio: ataque combo | L: test daño | M: menú', {
-            fontSize: '13px',
-            color: '#ffffff',
-            backgroundColor: '#00000099',
-            padding: { x: 8, y: 4 }
-        });
 
         this.dashText = this.add.text(16, 130, 'DASH: LISTO', {
             fontSize: '14px',

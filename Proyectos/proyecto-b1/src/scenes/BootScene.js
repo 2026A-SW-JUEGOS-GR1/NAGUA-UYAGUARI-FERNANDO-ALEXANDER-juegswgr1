@@ -9,6 +9,9 @@ export default class BootScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.audio('bgm', 'assets/sounds/bgm-loop.mp3');
+        this.load.audio('gameover', 'assets/sounds/game-over.mp3');
+
         this.load.tilemapTiledJSON('map-nivel1', 'assets/maps/nivel-1-new.json');
         this.load.tilemapTiledJSON('map-nivel2', 'assets/maps/nivel-2.json');
         this.load.image('tiles-nivel1', 'assets/tilesets/background.png');
@@ -107,6 +110,6 @@ export default class BootScene extends Phaser.Scene {
         gs.generateTexture('star', 24, 24);
         gs.destroy();
 
-        this.scene.start('Nivel1Scene');
+        this.scene.start('MenuScene');
     }
 }
